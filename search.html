@@ -122,18 +122,16 @@
         <!--面包屑-->
         <ul class="fl sui-breadcrumb">
           <li><span>全部结果:</span></li>
-          <li><a href="#">手机</a></li>
-          <li><span>手机通讯</span></li>
+          <li v-for="(c,i) in breads" :key="i">
+            <a href="#" v-if="i < 2">{{c.name}}</a>
+            <span v-else>{{c.name}}</span>
+          </li>
         </ul>
         <!--已选择过滤项-->
         <ul class="tags-choose">
-          <li class="tag">
-            品牌:<span style="color: red">apple</span>
-            <i class="sui-icon icon-tb-close"></i>
-          </li>
-          <li class="tag">
-            内存:<span style="color: red">4G</span>
-            <i class="sui-icon icon-tb-close"></i>
+          <li class="tag" v-for="(v,k) in search.filter" v-if="k !== 'cid3'" :key="k">
+            {{k === 'brandId' ? '品牌' : k}}:<span style="color: red">{{getFilterValue(k,v)}}</span>
+            <i class="sui-icon icon-tb-close" @click="removeFilter(k)"></i>
           </li>
         </ul>
         <div class="clearfix"></div>
@@ -141,41 +139,22 @@
       <!--selector-->
       <div class="clearfix selector">
         <div class="type-wrap">
-          <div class="fl key">分类</div>
+          <div class="fl key">{{filters[0].k}}</div>
           <div class="fl value">
             <ul class="type-list">
-              <li>
-                <a>手机</a>
-              </li>
-              <li>
-                <a>儿童手表</a>
+              <li v-for="(o) in filters[0].options" @click="selectFilter(filters[0].k,o)">
+                <a>{{o.name}}</a>
               </li>
             </ul>
           </div>
           <div class="fl ext"></div>
         </div>
         <div class="type-wrap logo">
-          <div class="fl key brand">品牌</div>
+          <div class="fl key brand">{{filters[1].k}}</div>
           <div class="value logos">
             <ul class="logo-list">
-              <li><img src="img/_/phone01.png"/></li>
-              <li><img src="img/_/phone02.png"/></li>
-              <li><img src="img/_/phone03.png"/></li>
-              <li><img src="img/_/phone04.png"/></li>
-              <li><img src="img/_/phone05.png"/></li>
-              <li><img src="img/_/phone06.png"/></li>
-              <li><img src="img/_/phone07.png"/></li>
-              <li><img src="img/_/phone08.png"/></li>
-              <li><img src="img/_/phone09.png"/></li>
-              <li><img src="img/_/phone10.png"/></li>
-              <li><img src="img/_/phone11.png"/></li>
-              <li><img src="img/_/phone12.png"/></li>
-              <li><img src="img/_/phone13.png"/></li>
-              <li><img src="img/_/phone14.png"/></li>
-              <li><img src="img/_/phone05.png"/></li>
-              <li><img src="img/_/phone06.png"/></li>
-              <li><img src="img/_/phone07.png"/></li>
-              <li style="text-align: center"><a style="line-height: 30px; font-size: 12px" href="#">黑马</a>
+              <li v-for="(o) in filters[1].options" @click="selectFilter(filters[1].k,o)">
+                <img :src="o.image"/>
               </li>
             </ul>
           </div>
@@ -183,114 +162,24 @@
             <a href="javascript:void(0);" class="sui-btn">多选</a>
           </div>
         </div>
-        <div class="type-wrap">
-          <div class="fl key">网络制式</div>
+        <div class="type-wrap" v-for="(item,index) in filters" v-if="index > 1"
+             v-show="index<5 || show">
+          <div class="fl key">{{item.k}}</div>
           <div class="fl value">
             <ul class="type-list">
-              <li>
-                <a>GSM（移动/联通2G）</a>
-              </li>
-              <li>
-                <a>电信2G</a>
-              </li>
-              <li>
-                <a>电信3G</a>
-              </li>
-              <li>
-                <a>移动3G</a>
-              </li>
-              <li>
-                <a>联通3G</a>
-              </li>
-              <li>
-                <a>联通4G</a>
-              </li>
-              <li>
-                <a>电信3G</a>
-              </li>
-              <li>
-                <a>移动3G</a>
-              </li>
-              <li>
-                <a>联通3G</a>
-              </li>
-              <li>
-                <a>联通4G</a>
+              <li v-for="(option) in item.options" @click="selectFilter(item.k,option)">
+                <a>{{option.name}}{{item.unit}}</a>
               </li>
             </ul>
           </div>
           <div class="fl ext"></div>
-        </div>
-        <div class="type-wrap">
-          <div class="fl key">显示屏尺寸</div>
-          <div class="fl value">
-            <ul class="type-list">
-              <li>
-                <a>4.0-4.9英寸</a>
-              </li>
-              <li>
-                <a>4.0-4.9英寸</a>
-              </li>
-            </ul>
-          </div>
-          <div class="fl ext"></div>
-        </div>
-        <div class="type-wrap">
-          <div class="fl key">摄像头像素</div>
-          <div class="fl value">
-            <ul class="type-list">
-              <li>
-                <a>1200万以上</a>
-              </li>
-              <li>
-                <a>800-1199万</a>
-              </li>
-              <li>
-                <a>1200-1599万</a>
-              </li>
-              <li>
-                <a>1600万以上</a>
-              </li>
-              <li>
-                <a>无摄像头</a>
-              </li>
-            </ul>
-          </div>
-          <div class="fl ext"></div>
-        </div>
-        <div class="type-wrap">
-          <div class="fl key">价格</div>
-          <div class="fl value">
-            <ul class="type-list">
-              <li>
-                <a>0-500元</a>
-              </li>
-              <li>
-                <a>500-1000元</a>
-              </li>
-              <li>
-                <a>1000-1500元</a>
-              </li>
-              <li>
-                <a>1500-2000元</a>
-              </li>
-              <li>
-                <a>2000-3000元 </a>
-              </li>
-              <li>
-                <a>3000元以上</a>
-              </li>
-            </ul>
-          </div>
-          <div class="fl ext">
-          </div>
         </div>
         <div class="type-wrap" style="text-align: center">
-          <v-btn small flat>
+          <v-btn small flat @click="show = true" v-show="!show">
             更多
             <v-icon>arrow_drop_down</v-icon>
           </v-btn>
-          <v-btn small="" flat>
+          <v-btn small="" flat @click="show = fales" v-show="show">
             收起
             <v-icon>arrow_drop_up</v-icon>
           </v-btn>
@@ -494,12 +383,16 @@
       ly,
       search: {
         key: "", // 搜索页面的关键字
-        page: 1
+        page: 1,
+        filter: {}//发送倒后台的过滤项
       },
       //接收得到的搜索结果
       goodsList: [],
       total: 0, // 总条数
-      totalPage: 0 // 总页数
+      totalPage: 0, // 总页数
+      filters: [], //过滤器
+      show: false,
+      breads: []
     },
     created() {
       // 判断是否有请求参数
@@ -511,6 +404,7 @@
       search.page = search.page ? parseInt(search.page) : 1;
       search.sortBy = search.sortBy || "";
       search.desc = search.desc === "true" || false;
+      search.filter = search.filter || {};
       // 记录在data的search对象中
       this.search = search;
       // 发起请求，根据条件搜索
@@ -530,6 +424,25 @@
           this.goodsList = resp.data.items;
           this.total = resp.data.total;
           this.totalPage = resp.data.totalPage;
+          //初始化分类过滤参数
+          if (resp.data.categories.length == 1) {
+            //如果只有一个，就查询三级商品分类，展示倒面包屑
+            ly.http.get("/item/category/all/level?id=" + resp.data.categories[0].id)
+            .then(resp => this.breads = resp.data);
+          }
+          this.filters.push({
+            k: "分类",
+            options: resp.data.categories
+          });
+          this.filters.push({
+            k: "品牌",
+            options: resp.data.brands
+          })
+          resp.data.specs.forEach(spec => {
+            spec.options = spec.options.map(o => ({name: o}));
+            this.filters.push(spec);
+
+          })
         });
       },
       index(i) {
@@ -552,6 +465,31 @@
         if (this.search.page < this.totalPage) {
           this.search.page++
         }
+      },
+      selectFilter(k, o) {
+        const obj = {};
+        Object.assign(obj, this.search);
+        if (k === '分类' || k === '品牌') {
+          o = o.id;
+        }
+        obj.filter[k] = o.name;
+        this.search = obj;
+      },
+      getFilterValue(k,v){
+        // 如果没有过滤参数，我们跳过展示
+        if(!this.filters || this.filters.length === 0){
+          return null;
+        }
+        let filter = null;
+        // 判断是否是品牌
+        if(k === 'brandId'){
+          // 返回品牌名称
+          return this.filters.find(f => f.k === 'brandId').options[0].name;
+        }
+        return v;
+      },
+      removeFilter(k){
+        this.search.filter[k] = null;
       }
     },
     components: {
@@ -568,6 +506,18 @@
           // 把search对象变成请求参数，拼接在url路径
           window.location.href = "http://www.leyou.com/search.html?" + ly.stringify(val);
         }
+      }
+    },
+    computed:{
+      remainFilters(){
+        const keys = Object.keys(this.search.filter);
+        if(this.search.filter.cid3){
+          keys.push("cid3")
+        }
+        if(this.search.filter.brandId){
+          keys.push("brandId")
+        }
+        return this.filters.filter(f => !keys.includes(f.k));
       }
     }
   });
