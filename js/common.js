@@ -1,4 +1,3 @@
-
 // 字符串格式化
 String.prototype.format = function () {
     const args = arguments;
@@ -9,8 +8,9 @@ String.prototype.format = function () {
 };
 
 String.format = function () {
-    if (arguments.length === 0)
+    if (arguments.length === 0) {
         return null;
+    }
     if (arguments.length === 1) {
         return arguments[0];
     }
@@ -77,7 +77,8 @@ const utils = {
             return false;
         }
 
-        return !!(obj.constructor && obj.constructor.isBuffer && obj.constructor.isBuffer(obj));
+        return !!(obj.constructor && obj.constructor.isBuffer
+            && obj.constructor.isBuffer(obj));
     },
     isRegExp(obj) {
         return Object.prototype.toString.call(obj) === '[object RegExp]';
@@ -94,7 +95,8 @@ const utils = {
             for (var j = 0; j < keys.length; ++j) {
                 var key = keys[j];
                 var val = obj[key];
-                if (typeof val === 'object' && val !== null && refs.indexOf(val) === -1) {
+                if (typeof val === 'object' && val !== null && refs.indexOf(val)
+                    === -1) {
                     queue.push({obj: obj, prop: key});
                     refs.push(val);
                 }
@@ -134,17 +136,22 @@ const utils = {
             }
 
             if (c < 0x800) {
-                out = out + (utils.hexTable[0xC0 | (c >> 6)] + utils.hexTable[0x80 | (c & 0x3F)]);
+                out = out + (utils.hexTable[0xC0 | (c >> 6)]
+                    + utils.hexTable[0x80 | (c
+                        & 0x3F)]);
                 continue;
             }
 
             if (c < 0xD800 || c >= 0xE000) {
-                out = out + (utils.hexTable[0xE0 | (c >> 12)] + utils.hexTable[0x80 | ((c >> 6) & 0x3F)] + utils.hexTable[0x80 | (c & 0x3F)]);
+                out = out + (utils.hexTable[0xE0 | (c >> 12)]
+                    + utils.hexTable[0x80
+                    | ((c >> 6) & 0x3F)] + utils.hexTable[0x80 | (c & 0x3F)]);
                 continue;
             }
 
             i += 1;
-            c = 0x10000 + (((c & 0x3FF) << 10) | (string.charCodeAt(i) & 0x3FF));
+            c = 0x10000 + (((c & 0x3FF) << 10) | (string.charCodeAt(i)
+                & 0x3FF));
             out += utils.hexTable[0xF0 | (c >> 18)]
                 + utils.hexTable[0x80 | ((c >> 12) & 0x3F)]
                 + utils.hexTable[0x80 | ((c >> 6) & 0x3F)]
@@ -162,7 +169,8 @@ const utils = {
     hexTable: (function () {
         var array = [];
         for (var i = 0; i < 256; ++i) {
-            array.push('%' + ((i < 16 ? '0' : '') + i.toString(16)).toUpperCase());
+            array.push(
+                '%' + ((i < 16 ? '0' : '') + i.toString(16)).toUpperCase());
         }
 
         return array;
@@ -176,7 +184,9 @@ const utils = {
             if (Array.isArray(target)) {
                 target.push(source);
             } else if (typeof target === 'object') {
-                if (options.plainObjects || options.allowPrototypes || !has.call(Object.prototype, source)) {
+                if (options.plainObjects || options.allowPrototypes
+                    || !has.call(
+                        Object.prototype, source)) {
                     target[source] = true;
                 }
             } else {
@@ -233,16 +243,18 @@ Date.prototype.format = function (format) {
         "S": this.getMilliseconds() //millisecond
     };
     if (/(y+)/.test(format)) {
-        format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        format = format.replace(RegExp.$1,
+            (this.getFullYear() + "").substr(4 - RegExp.$1.length));
     }
     for (var k in o) {
         if (new RegExp("(" + k + ")").test(format)) {
-            format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+            format = format.replace(RegExp.$1,
+                RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(
+                    ("" + o[k]).length));
         }
     }
     return format;
 };
-
 
 var has = Object.prototype.hasOwnProperty;
 
@@ -258,17 +270,19 @@ var defaults = {
     strictNullHandling: false
 };
 
-var parseValues = function(str, options) {
+var parseValues = function (str, options) {
     var obj = {};
     var cleanStr = options.ignoreQueryPrefix ? str.replace(/^\?/, '') : str;
-    var limit = options.parameterLimit === Infinity ? undefined : options.parameterLimit;
+    var limit = options.parameterLimit === Infinity ? undefined
+        : options.parameterLimit;
     var parts = cleanStr.split(options.delimiter, limit);
 
     for (var i = 0; i < parts.length; ++i) {
         var part = parts[i];
 
         var bracketEqualsPos = part.indexOf(']=');
-        var pos = bracketEqualsPos === -1 ? part.indexOf('=') : bracketEqualsPos + 1;
+        var pos = bracketEqualsPos === -1 ? part.indexOf('=') : bracketEqualsPos
+            + 1;
 
         var key, val;
         if (pos === -1) {
@@ -300,7 +314,9 @@ var parseObject = function (chain, val, options) {
             obj = obj.concat(leaf);
         } else {
             obj = options.plainObjects ? Object.create(null) : {};
-            var cleanRoot = root.charAt(0) === '[' && root.charAt(root.length - 1) === ']' ? root.slice(1, -1) : root;
+            var cleanRoot = root.charAt(0) === '[' && root.charAt(
+                root.length - 1)
+            === ']' ? root.slice(1, -1) : root;
             var index = parseInt(cleanRoot, 10);
             if (
                 !isNaN(index)
@@ -328,7 +344,8 @@ var parseKeys = function parseQueryStringKeys(givenKey, val, options) {
     }
 
     // Transform dot notation to bracket notation
-    var key = options.allowDots ? givenKey.replace(/\.([^.[]+)/g, '[$1]') : givenKey;
+    var key = options.allowDots ? givenKey.replace(/\.([^.[]+)/g, '[$1]')
+        : givenKey;
 
     // The regex chunks
 
@@ -360,7 +377,8 @@ var parseKeys = function parseQueryStringKeys(givenKey, val, options) {
     var i = 0;
     while ((segment = child.exec(key)) !== null && i < options.depth) {
         i += 1;
-        if (!options.plainObjects && has.call(Object.prototype, segment[1].slice(1, -1))) {
+        if (!options.plainObjects && has.call(Object.prototype,
+            segment[1].slice(1, -1))) {
             if (!options.allowPrototypes) {
                 return;
             }
@@ -380,21 +398,32 @@ var parseKeys = function parseQueryStringKeys(givenKey, val, options) {
 const parse = function (str, opts) {
     var options = opts ? utils.assign({}, opts) : {};
 
-    if (options.decoder !== null && options.decoder !== undefined && typeof options.decoder !== 'function') {
+    if (options.decoder !== null && options.decoder !== undefined
+        && typeof options.decoder !== 'function') {
         throw new TypeError('Decoder has to be a function.');
     }
 
     options.ignoreQueryPrefix = options.ignoreQueryPrefix === true;
-    options.delimiter = typeof options.delimiter === 'string' || utils.isRegExp(options.delimiter) ? options.delimiter : defaults.delimiter;
-    options.depth = typeof options.depth === 'number' ? options.depth : defaults.depth;
-    options.arrayLimit = typeof options.arrayLimit === 'number' ? options.arrayLimit : defaults.arrayLimit;
+    options.delimiter = typeof options.delimiter === 'string' || utils.isRegExp(
+        options.delimiter) ? options.delimiter : defaults.delimiter;
+    options.depth = typeof options.depth === 'number' ? options.depth
+        : defaults.depth;
+    options.arrayLimit = typeof options.arrayLimit === 'number'
+        ? options.arrayLimit : defaults.arrayLimit;
     options.parseArrays = options.parseArrays !== false;
-    options.decoder = typeof options.decoder === 'function' ? options.decoder : defaults.decoder;
-    options.allowDots = typeof options.allowDots === 'boolean' ? options.allowDots : defaults.allowDots;
-    options.plainObjects = typeof options.plainObjects === 'boolean' ? options.plainObjects : defaults.plainObjects;
-    options.allowPrototypes = typeof options.allowPrototypes === 'boolean' ? options.allowPrototypes : defaults.allowPrototypes;
-    options.parameterLimit = typeof options.parameterLimit === 'number' ? options.parameterLimit : defaults.parameterLimit;
-    options.strictNullHandling = typeof options.strictNullHandling === 'boolean' ? options.strictNullHandling : defaults.strictNullHandling;
+    options.decoder = typeof options.decoder === 'function' ? options.decoder
+        : defaults.decoder;
+    options.allowDots = typeof options.allowDots === 'boolean'
+        ? options.allowDots
+        : defaults.allowDots;
+    options.plainObjects = typeof options.plainObjects === 'boolean'
+        ? options.plainObjects : defaults.plainObjects;
+    options.allowPrototypes = typeof options.allowPrototypes === 'boolean'
+        ? options.allowPrototypes : defaults.allowPrototypes;
+    options.parameterLimit = typeof options.parameterLimit === 'number'
+        ? options.parameterLimit : defaults.parameterLimit;
+    options.strictNullHandling = typeof options.strictNullHandling === 'boolean'
+        ? options.strictNullHandling : defaults.strictNullHandling;
 
     if (str === '' || str === null || typeof str === 'undefined') {
         return options.plainObjects ? Object.create(null) : {};
@@ -414,23 +443,25 @@ const parse = function (str, opts) {
 
     return utils.compact(obj);
 };
-const stringify = function(object, options) {
-    let option =  {
-        prefix : "",
-        generateArrayPrefix : utils.generateArrayPrefix,
+const stringify = function (object, options) {
+    let option = {
+        prefix: "",
+        generateArrayPrefix: utils.generateArrayPrefix,
         strictNullHandling: null,
         skipNulls: null,
-        encoder : utils.encode,
+        encoder: utils.encode,
         filter: null,
         sort: null,
-        allowDots : true,
+        allowDots: true,
         serializeDate: null,
-        formatter : utils.formatter,
+        formatter: utils.formatter,
         encodeValuesOnly: true
     }
     Object.assign(option, options);
-    let {prefix, generateArrayPrefix, strictNullHandling, skipNulls, encoder, filter,
-        sort, allowDots, serializeDate, formatter, encodeValuesOnly} = option;
+    let {
+        prefix, generateArrayPrefix, strictNullHandling, skipNulls, encoder, filter,
+        sort, allowDots, serializeDate, formatter, encodeValuesOnly
+    } = option;
 
     var obj = object;
     if (typeof filter === 'function') {
@@ -446,20 +477,23 @@ const stringify = function(object, options) {
         return values;
     }
 
-    if (typeof obj === 'string' || typeof obj === 'number' || typeof obj === 'boolean' || utils.isBuffer(obj)) {
+    if (typeof obj === 'string' || typeof obj === 'number' || typeof obj
+        === 'boolean' || utils.isBuffer(obj)) {
         if (encoder) {
-            var keyValue = encodeValuesOnly ? prefix : encoder(prefix, utils.encoder);
-            if(allowDots){
+            var keyValue = encodeValuesOnly ? prefix : encoder(prefix,
+                utils.encoder);
+            if (allowDots) {
                 keyValue = keyValue.substring(1);
-            }else{
-                const arr =keyValue.match(/\[\w+\]/g);
-                keyValue = arr[0].substring(1,arr[0].length-1) + keyValue.substring(arr[0].length);
+            } else {
+                const arr = keyValue.match(/\[\w+\]/g);
+                keyValue = arr[0].substring(1, arr[0].length - 1)
+                    + keyValue.substring(
+                        arr[0].length);
             }
             return [keyValue + '=' + formatter(encoder(obj, utils.encoder))];
         }
         return [formatter(prefix) + '=' + formatter(String(obj))];
     }
-
 
     var objKeys;
     if (Array.isArray(filter)) {
@@ -479,32 +513,36 @@ const stringify = function(object, options) {
         if (Array.isArray(obj)) {
             values = values.concat(this.stringify(
                 obj[key],
-                {prefix:generateArrayPrefix(prefix, key),
-                generateArrayPrefix,
-                strictNullHandling,
-                skipNulls,
-                encoder,
-                filter,
-                sort,
-                allowDots,
-                serializeDate,
-                formatter,
-                encodeValuesOnly}
+                {
+                    prefix: generateArrayPrefix(prefix, key),
+                    generateArrayPrefix,
+                    strictNullHandling,
+                    skipNulls,
+                    encoder,
+                    filter,
+                    sort,
+                    allowDots,
+                    serializeDate,
+                    formatter,
+                    encodeValuesOnly
+                }
             ));
         } else {
             values = values.concat(this.stringify(
                 obj[key],
-                {prefix:prefix + (allowDots ? '.' + key : '[' + key + ']'),
-                generateArrayPrefix,
-                strictNullHandling,
-                skipNulls,
-                encoder,
-                filter,
-                sort,
-                allowDots,
-                serializeDate,
-                formatter,
-                encodeValuesOnly}
+                {
+                    prefix: prefix + (allowDots ? '.' + key : '[' + key + ']'),
+                    generateArrayPrefix,
+                    strictNullHandling,
+                    skipNulls,
+                    encoder,
+                    filter,
+                    sort,
+                    allowDots,
+                    serializeDate,
+                    formatter,
+                    encodeValuesOnly
+                }
             ));
         }
     }
@@ -518,6 +556,9 @@ axios.defaults.withCredentials = true
 
 // 配置对象
 const ly = leyou = {
+    verifyUser() {
+        return this.http.get("/auth/verify");
+    },
     /**
      * 对encodeURI()编码过的 URI 进行解码。并且获取其中的指定参数
      * @param name
@@ -552,52 +593,53 @@ const ly = leyou = {
      * @returns {*}
      */
     formatPrice(val) {
-        if(typeof val === 'string'){
-            if(isNaN(val)){
+        if (typeof val === 'string') {
+            if (isNaN(val)) {
                 return null;
             }
             // 价格转为整数
             const index = val.lastIndexOf(".");
             let p = "";
-            if(index < 0){
+            if (index < 0) {
                 // 无小数
                 p = val + "00";
-            }else if(index === p.length - 2){
+            } else if (index === p.length - 2) {
                 // 1位小数
-                p = val.replace("\.","") + "0";
-            }else{
+                p = val.replace("\.", "") + "0";
+            } else {
                 // 2位小数
-                p = val.replace("\.","")
+                p = val.replace("\.", "")
             }
             return parseInt(p);
-        }else if(typeof val === 'number'){
-            if(val == null){
+        } else if (typeof val === 'number') {
+            if (val == null) {
                 return null;
             }
             const s = val + '';
-            if(s.length === 0){
+            if (s.length === 0) {
                 return "0.00";
             }
-            if(s.length === 1){
+            if (s.length === 1) {
                 return "0.0" + val;
             }
-            if(s.length === 2){
+            if (s.length === 2) {
                 return "0." + val;
             }
             const i = s.indexOf(".");
-            if(i < 0){
-                return s.substring(0, s.length - 2) + "." + s.substring(s.length-2)
+            if (i < 0) {
+                return s.substring(0, s.length - 2) + "." + s.substring(
+                    s.length - 2)
             }
-            const num = s.substring(0,i) + s.substring(i+1);
-            if(i === 1){
+            const num = s.substring(0, i) + s.substring(i + 1);
+            if (i === 1) {
                 // 1位整数
                 return "0.0" + num;
             }
-            if(i === 2){
+            if (i === 2) {
                 return "0." + num;
             }
-            if( i > 2){
-                return num.substring(0,i-2) + "." + num.substring(i-2)
+            if (i > 2) {
+                return num.substring(0, i - 2) + "." + num.substring(i - 2)
             }
         }
     },

@@ -45,10 +45,10 @@ const shortcut = {
         }
     },
     created() {
-/*        ly.http("/auth/verify")
+        ly.http("/auth/verify")
             .then(resp => {
                 this.user = resp.data;
-            })*/
+            })
     },
     methods: {
         gotoLogin() {
